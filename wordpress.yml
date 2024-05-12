@@ -1,0 +1,32 @@
+---
+
+- name: Create EC2 instance
+  hosts: localhost
+  become: yes
+  gather_facts: false
+  roles:
+    - role: create_ec2
+      tags: create_ec2
+
+- name: Install wordpress
+  hosts: tag_Name_saeed_ansible
+  become: yes
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - role: install_wordpress
+      tags: wordpress
+
+- name: Install MySQL
+  hosts: tag_Name_saeed_ansible
+  become: yes
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - role: install_mysql
+      tags: install_mysql
+
+# - name: Manage EC2 instance
+#   hosts: localhost
+#   roles:
+#     - manage_ec2

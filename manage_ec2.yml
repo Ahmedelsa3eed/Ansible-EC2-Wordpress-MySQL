@@ -1,0 +1,40 @@
+---
+- name: Manage EC2 instance state
+  hosts: localhost
+  gather_facts: false
+  become: yes
+  vars:
+    instance_id: "{{ lookup('ansible.builtin.file', '/tmp/instance_id') }}"
+  tasks:
+
+  - name: Print instance id
+    tags: [ debug ]
+    debug:
+      msg: "Instance id is {{ instance_id }}"
+
+  - name: Start EC2 instance
+    tags: [ start ]
+    ec2_instance:
+      region: "{{ region }}"
+      access_key: "{{ access_key }}"
+      secret_key: "{{ secret_key }}"
+      instance_ids: "{{ instance_id }}"
+      state: started
+
+  - name: Stop EC2 instance
+    tags: [ stop ]
+    ec2_instance:
+      region: "{{ region }}"
+      access_key: "{{ access_key }}"
+      secret_key: "{{ secret_key }}"
+      instance_ids: "{{ instance_id }}"
+      state: stopped
+
+  - name: Terminate EC2 instance
+    tags: [ terminate ]
+    ec2_instance:
+      region: "{{ region }}"
+      access_key: "{{ access_key }}"
+      secret_key: "{{ secret_key }}"
+      instance_ids: "{{ instance_id }}"
+      state: absent

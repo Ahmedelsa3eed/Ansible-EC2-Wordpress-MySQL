@@ -1,0 +1,47 @@
+---
+
+- name: Create an EC2 key pair
+  tags: [ create_ec2, create_key ]
+  ec2_key:
+    access_key: "{{ access_key }}"
+    secret_key: "{{ secret_key }}"
+    file_name: /tmp/ansible_ec2.pem
+    force: true
+    key_type: rsa
+    name: ansible_ec2
+    region: "{{ region }}"
+  register: key
+
+- name: Create an EC2 instance
+  tags: create_ec2
+  ec2_instance:
+    name: "saeed_ansible"
+    region: "{{ region }}"
+    key_name: "{{ key.name }}"
+    access_key: "{{ access_key }}"
+    secret_key: "{{ secret_key }}"
+    vpc_subnet_id: subnet-0c4fad1c9786f7e91
+    instance_type: t3.small
+    security_group: sg-02210e278a1cc44d4
+    network:
+      assign_public_ip: true
+    image_id: ami-0e001c9271cf7f3b9
+    wait: true
+  register: ec2
+
+- name: Add host to group 'tag_Name_saeed_ansible'
+  tags: [ create_ec2, add_host ]
+  add_host:
+    name: '{{ ec2.instances[0].public_ip_address }}'
+    groups: tag_Name_saeed_ansible
+
+- name: Print instance public ip address
+  tags: [ info, create_ec2 ]
+  debug:
+    msg: "Instance IP is {{ ec2.instances[0].public_ip_address }} and ID is {{ ec2.instances[0].instance_id }}"
+
+- name: Save instance id to /tmp/instance_id
+  tags: [ info, create_ec2 ]
+  copy:
+    content: "instance_id: {{ ec2.instances[0].instance_id }}"
+    dest: /tmp/instance_id
