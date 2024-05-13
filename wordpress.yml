@@ -3,6 +3,7 @@
 - name: Create EC2 instance
   hosts: localhost
   become: yes
+  become_user: saeed
   gather_facts: false
   roles:
     - role: create_ec2
@@ -25,3 +26,12 @@
   roles:
     - role: install_mysql
       tags: install_mysql
+
+- name: Output the EC2 instance endpoint
+  hosts: localhost
+  become: yes
+  gather_facts: false
+  tasks:
+    - name: Output the EC2 instance endpoint
+      debug:
+        msg: "The EC2 instance endpoint is http://{{ ec2.instances[0].public_ip_address }}"

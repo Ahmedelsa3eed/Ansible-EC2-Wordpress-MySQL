@@ -16,7 +16,7 @@
   tags: [ create_ec2, create_key, permissions ]
   file:
     path: /home/saeed/.ssh/saeed_ansible_key_ec2
-    mode: '0400'
+    mode: '0600'
     owner: saeed
     group: saeed
 
