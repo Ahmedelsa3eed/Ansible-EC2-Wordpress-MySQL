@@ -3,7 +3,7 @@
   hosts: localhost
   gather_facts: false
   vars:
-    instance_id: "{{ lookup('ansible.builtin.file', '/tmp/instance_id') }}"
+    instance_id: "{{ lookup('ansible.builtin.file', '/home/saeed/instance_id') }}"
   vars_files:
     - secrets.yml
   tasks:

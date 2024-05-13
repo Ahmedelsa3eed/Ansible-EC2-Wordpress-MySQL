@@ -53,8 +53,8 @@
   debug:
     msg: "Instance IP is {{ ec2.instances[0].public_ip_address }} and ID is {{ ec2.instances[0].instance_id }}"
 
-- name: Save instance id to /tmp/instance_id
+- name: Save instance id to /home/saeed/instance_id
   tags: [ info, create_ec2 ]
   copy:
     content: "{{ ec2.instances[0].instance_id }}"
-    dest: /tmp/instance_id
+    dest: /home/saeed/instance_id
