@@ -2,9 +2,10 @@
 - name: Manage EC2 instance state
   hosts: localhost
   gather_facts: false
-  become: yes
   vars:
     instance_id: "{{ lookup('ansible.builtin.file', '/tmp/instance_id') }}"
+  vars_files:
+    - secrets.yml
   tasks:
 
   - name: Print instance id

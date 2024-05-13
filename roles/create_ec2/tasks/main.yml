@@ -5,12 +5,20 @@
   amazon.aws.ec2_key:
     access_key: "{{ access_key }}"
     secret_key: "{{ secret_key }}"
-    file_name: /tmp/saeed_ansible_key_ec2
+    file_name: /home/saeed/.ssh/saeed_ansible_key_ec2
     force: true
     key_type: rsa
     name: saeed_ansible_key_ec2
     region: "{{ region }}"
   register: saeed_ansible_key_pair
+
+- name: Change private key permissions on localhost
+  tags: [ create_ec2, create_key, permissions ]
+  file:
+    path: /home/saeed/.ssh/saeed_ansible_key_ec2
+    mode: '0400'
+    owner: saeed
+    group: saeed
 
 - name: Output of key pair msg
   tags: [ info, create_ec2, create_key ]
@@ -20,7 +28,7 @@
 - name: Create an EC2 instance
   tags: create_ec2
   ec2_instance:
-    name: saeed_ansible_key_ec2
+    name: saeed_ansible
     region: "{{ region }}"
     key_name: "{{ saeed_ansible_key_pair.key.name }}"
     access_key: "{{ access_key }}"
@@ -48,5 +56,5 @@
 - name: Save instance id to /tmp/instance_id
   tags: [ info, create_ec2 ]
   copy:
-    content: "instance_id: {{ ec2.instances[0].instance_id }}"
+    content: "{{ ec2.instances[0].instance_id }}"
     dest: /tmp/instance_id

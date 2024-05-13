@@ -15,24 +15,25 @@
     state: present
   notify: Restart Apache
 
-- name: Copy SSH private key to host
+- name: Copy Github SSH private key (/home/saeed/.ssh/ansible_github_ssh_key) to host
   tags: [ ssh, github ]
   copy:
-    src: "/home/saeed/.ssh/id_rsa"
-    dest: "/home/ubuntu/.ssh/id_rsa"
+    src: "/home/saeed/.ssh/ansible_github_ssh_key"
+    dest: "/home/ubuntu/.ssh/ansible_github_ssh_key"
     owner: ubuntu
     group: ubuntu
     mode: '0600'
     remote_src: false
 
 - name: Download WordPress from private repository
-  tags: [ download ]
+  tags: [ download, github ]
   ansible.builtin.git:
-    repo: git@github.com:Ahmedelsa3eed/WordPress.git
+    repo: git@github.com:Ahmedelsa3eed/wordpress-ansible.git
     dest: "/var/www/html/wordpress"
-    version: master
+    version: main
     clone: yes
-    key_file: "/home/ubuntu/.ssh/id_rsa"
+    key_file: "/home/ubuntu/.ssh/ansible_github_ssh_key"
+    accept_hostkey: yes
 
 - name: Set ownership and permissions for WordPress files
   tags: [ permissions ]
