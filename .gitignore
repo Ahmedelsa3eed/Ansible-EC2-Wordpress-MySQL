@@ -1,6 +1,4 @@
 .vscode
 
-secrets.yml
-demo.aws_ec2.yml
-roles/*/vars/main.yml
+vars.yml
 tests/

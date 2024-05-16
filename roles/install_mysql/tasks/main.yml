@@ -55,10 +55,19 @@
     login_password: "{{ mysql_root_password }}"
   tags: [ mysql ]
 
+- name: Create backup directory
+  tags: [ mysql, backup ]
+  file:
+    path: /home/ubuntu/backups
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+
 - name: Add daily backup cron job
   tags: [ mysql, backup, cron ]
   cron:
     name: "MySQL Backup"
     minute: '0'
     hour: '1'
-    job: "mysqldump --all-databases > /var/backups/mysql-$(date +%Y%m%d).sql"
+    job: "sudo mysqldump -u root -p'@19015357' --all-databases > /home/ubuntu/backups/mysql-$(date +%Y%m%d).sql"
+    user: ubuntu
