@@ -42,6 +42,11 @@
     wait: true
   register: ec2
 
+- name: Pause for 30 seconds
+  tags: [ create_ec2 ]
+  pause:
+    seconds: 30
+
 - name: Add host to group 'tag_Name_saeed_ansible'
   tags: [ create_ec2, add_host ]
   add_host:
