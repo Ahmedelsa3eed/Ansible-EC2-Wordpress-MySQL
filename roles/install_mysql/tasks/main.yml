@@ -69,5 +69,5 @@
     name: "MySQL Backup"
     minute: '0'
     hour: '1'
-    job: "sudo mysqldump -u root -p'@19015357' --all-databases > /home/ubuntu/backups/mysql-$(date +%Y%m%d).sql"
+    job: "sudo mysqldump -u root -p'{{ mysql_root_password }}' --all-databases > /home/ubuntu/backups/mysql-$(date +%Y%m%d).sql"
     user: ubuntu
