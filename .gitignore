@@ -1,4 +1,5 @@
 .vscode
+terraform/
 
-vars.yml
+# vars.yml
 tests/

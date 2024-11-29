@@ -1,37 +1,61 @@
 ---
-
 - name: Create EC2 instance
   hosts: localhost
-  become: yes
-  become_user: saeed
   gather_facts: false
+  vars:
+    access_key: "{{ access_key }}"
+    secret_key: "{{ secret_key }}"
+    region: "{{ region }}"
+    vpc_name: "{{ vpc_name }}"
+    vpc_cidr: "{{ vpc_cidr }}"
+    subnet_name: "{{ subnet_name }}"
+    subnet_cidr: "{{ subnet_cidr }}"
+    subnet_zone: "{{ subnet_zone }}"
+    security_group_name: "{{ security_group_name }}"
+    rules: "{{ rules }}"
+    key_name: "{{ key_name }}"
+    key_path: "{{ key_path }}"
+    machine_name: "{{ machine_name }}"
+    machine_type: "{{ machine_type }}"
+    image_id: "{{ image_id }}"
+    system_disk_device: "{{ system_disk_device }}"
+    system_disk_size: "{{ system_disk_size }}"
+    system_disk_type: "{{ system_disk_type }}"
   roles:
-    - role: create_ec2
-      tags: create_ec2
+    - create_ec2
 
 - name: Install wordpress
-  hosts: tag_Name_saeed_ansible
-  become: yes
+  hosts: new_instance
+  become: true
   gather_facts: false
   remote_user: ubuntu
+  vars:
+    ansible_ssh_common_args: '-o IdentitiesOnly=yes'
+    token: "{{ token }}"
+    mysql_db: "{{ mysql_db }}"
+    mysql_user: "{{ mysql_user }}"
+    mysql_password: "{{ mysql_password }}"
   roles:
-    - role: install_wordpress
-      tags: wordpress
+    - install_wordpress
 
 - name: Install MySQL
-  hosts: tag_Name_saeed_ansible
-  become: yes
+  hosts: new_instance
+  become: true
   gather_facts: false
   remote_user: ubuntu
+  vars:
+    ansible_ssh_common_args: '-o IdentitiesOnly=yes'
+    mysql_db: "{{ mysql_db }}"
+    mysql_user: "{{ mysql_user }}"
+    mysql_password: "{{ mysql_password }}"
+    mysql_root_password: "{{ mysql_root_password }}"
   roles:
-    - role: install_mysql
-      tags: install_mysql
+    - install_mysql
 
 - name: Output the EC2 instance endpoint
   hosts: localhost
-  become: yes
   gather_facts: false
   tasks:
     - name: Output the EC2 instance endpoint
       debug:
-        msg: "The EC2 instance endpoint is http://{{ ec2.instances[0].public_ip_address }}"
+        msg: "The EC2 instance endpoint is http://{{ eip.public_ip }}"

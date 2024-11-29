@@ -1,0 +1,13 @@
+---
+- name: Delete EC2 instance
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Delete EC2 instance
+      amazon.aws.ec2_instance:
+        access_key: "{{ access_key }}"
+        secret_key: "{{ secret_key }}"
+        filters:
+          "tag:Name": "{{ machine_name }}" 
+        region: "{{ region }}"
+        state: absent
